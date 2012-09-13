@@ -1,0 +1,31 @@
+<j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:d="jelly:define" xmlns:l="/lib/layout" xmlns:t="/lib/hudson" xmlns:f="/lib/form">
+
+    <l:layout title="JobTemplates Plugin">
+        <l:side-panel>
+    		<l:tasks>
+      			<l:task icon="plugin/jobtemplates/icons/up-32x32.png" href="${rootURL}/" title="${%Back to Jenkins}" />
+      		</l:tasks>
+ 		</l:side-panel>
+        <l:main-panel>
+            <h2>${%Create a new job by copying an existing one}</h2>
+            <f:form action="${rootURL}/jobtemplates/createJob" method="post" name="jobtemplates">
+    
+    	        <f:entry title="${%Name of the new job:}">
+	                <f:textbox name="newname" style="width:300px"/>
+                </f:entry>
+    
+				<f:entry title="${%Copy job from:}">
+					<j:forEach items="${it.getTemplates()}" var="temp">
+		                <f:radio name="template" value="${temp.getName()}"/>
+	        	        ${temp.getName()}<br />
+       				</j:forEach>
+				</f:entry>
+            
+            	<f:entry>
+	                <f:submit name="submit" value="${%Submit}"/>
+            	</f:entry>
+    
+            </f:form>
+        </l:main-panel>
+    </l:layout>
+</j:jelly>
