@@ -17,12 +17,15 @@
 				<f:entry title="${%Copy job from:}">
 					<j:forEach items="${it.getTemplates()}" var="temp">
 		                <f:radio name="template" value="${temp.getName()}"/>
-	        	        ${temp.getName()}<br />
+	        	        <b>${temp.getName()}</b>
+	        	        <br />
+	        	        <span style="margin-left:3em">${temp.getDescription()}</span>
+	        	        <br />
        				</j:forEach>
 				</f:entry>
             
             	<f:entry>
-	                <f:submit name="submit" value="${%Submit}"/>
+	                <f:submit name="submit" value="${%OK}"/>
             	</f:entry>
     
             </f:form>
