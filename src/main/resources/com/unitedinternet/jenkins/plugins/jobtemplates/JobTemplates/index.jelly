@@ -25,9 +25,9 @@
 				</f:entry>
             
             	<f:entry>
-	                <f:submit name="submit" value="${%OK}"/>
+ 					<f:submit value="${%OK}"/>
             	</f:entry>
-    
+
             </f:form>
         </l:main-panel>
     </l:layout>
