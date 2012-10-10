@@ -2,16 +2,13 @@ package com.unitedinternet.jenkins.plugins.jobtemplates;
 
 import java.io.IOException;
 import java.io.Writer;
-import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
 
-import javax.servlet.ServletException;
-
 import jenkins.model.Jenkins;
 
-import org.kohsuke.stapler.QueryParameter;
+import org.acegisecurity.AccessDeniedException;
 import org.kohsuke.stapler.StaplerRequest;
 import org.kohsuke.stapler.StaplerResponse;
 
@@ -21,7 +18,7 @@ import hudson.model.Failure;
 import hudson.model.Item;
 import hudson.model.RootAction;
 import hudson.model.TopLevelItem;
-import hudson.util.FormValidation;
+import hudson.security.Permission;
 
 
 /**
@@ -31,14 +28,31 @@ import hudson.util.FormValidation;
 @Extension
 public class JobTemplates implements RootAction {
 
-    private static final Logger LOG = Logger.getLogger(JobTemplates.class.getName());
+//    private static final Logger LOG = Logger.getLogger(JobTemplates.class.getName());
 
+    /**
+     * The hudson instance.
+     */
+    private final Hudson jenkins;
+
+    /**
+     * Set the {@link Hudson} instance.
+     */
+    public JobTemplates() {
+        jenkins = Hudson.getInstance();
+    }
+    
+    public final Hudson getJenkins(){
+        return jenkins;
+    }
+    
     public final String getIconFileName() {
-        return "/plugin/jobtemplates/icons/jobtemplates-32x32.png";
+        return jenkins.hasPermission(Permission.CREATE) ? 
+            "/plugin/jobtemplates/icons/jobtemplates-32x32.png" : null;
     }
 
     public final String getDisplayName() {
-        return "New Job from Template";
+        return Messages.displayName();
     }
 
     public final String getUrlName() {
@@ -59,8 +73,14 @@ public class JobTemplates implements RootAction {
     
     public final void doCreateJob(StaplerRequest req, StaplerResponse rsp)
             throws IOException {
-        
-        final Hudson jenkins = Hudson.getInstance();
+
+        try {
+            jenkins.checkPermission(Permission.CREATE);
+        } catch (AccessDeniedException ex){
+            writeMessage(req, rsp, ex.getMessage());
+            return;
+        }
+
         final String newName = req.getParameter("newname");
         final String templateName = req.getParameter("template");
         
@@ -72,17 +92,17 @@ public class JobTemplates implements RootAction {
         }
 
         if (jenkins.getItem(newName) != null){
-            writeMessage(req, rsp, "A job with this name already exists.");
+            writeMessage(req, rsp, Messages.jobExists());
             return;
         }
         
         if (templateName == null){
-            writeMessage(req, rsp, "Please choose a job to copy.");
+            writeMessage(req, rsp, Messages.chooseJob());
             return;
         }
         
         final Item template = jenkins.getItem(templateName);
-        final Item newJob = Hudson.getInstance().copy((TopLevelItem)template, newName);
+        final Item newJob = jenkins.copy((TopLevelItem)template, newName);
         rsp.sendRedirect(jenkins.getRootUrl() + newJob.getUrl() + "configure");
     }
     
