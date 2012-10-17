@@ -13,6 +13,7 @@ import org.kohsuke.stapler.StaplerRequest;
 import org.kohsuke.stapler.StaplerResponse;
 
 import hudson.Extension;
+import hudson.model.AbstractProject;
 import hudson.model.Hudson;
 import hudson.model.Failure;
 import hudson.model.Item;
@@ -47,7 +48,7 @@ public class JobTemplates implements RootAction {
     }
     
     public final String getIconFileName() {
-        return jenkins.hasPermission(Permission.CREATE) ? 
+        return jenkins.hasPermission(AbstractProject.CREATE) ? 
             "/plugin/jobtemplates/icons/jobtemplates-32x32.png" : null;
     }
 
@@ -75,7 +76,7 @@ public class JobTemplates implements RootAction {
             throws IOException {
 
         try {
-            jenkins.checkPermission(Permission.CREATE);
+            jenkins.checkPermission(AbstractProject.CREATE);
         } catch (AccessDeniedException ex){
             writeMessage(req, rsp, ex.getMessage());
             return;
