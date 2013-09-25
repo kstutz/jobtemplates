@@ -70,7 +70,7 @@ public class JobTemplates implements RootAction {
 
     /**
      * Returns the available job templates.
-     * (i.e. all jobs with names starting with 'template_')
+     * (i.e. all jobs with names starting with 'Template_')
      * @return ArrayList of template jobs
      */
     public ArrayList<Item> getTemplates() {
@@ -101,7 +101,7 @@ public class JobTemplates implements RootAction {
             return;
         }
 
-        final String newName = req.getParameter("newname");
+        final String newName = req.getParameter("newName");
         final String templateName = req.getParameter("template");
         
         try {

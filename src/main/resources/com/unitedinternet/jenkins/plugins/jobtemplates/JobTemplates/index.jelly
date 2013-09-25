@@ -10,7 +10,7 @@
             <f:form action="${rootURL}/jobtemplates/createJob" method="post" name="jobtemplates">
     
     	        <f:entry title="${%Name of the new job}:">
-	                <f:textbox name="newname" style="width:300px"/>
+	                <f:textbox name="newName" style="width:300px"/>
                 </f:entry>
     
 				<f:entry title="${%Copy job from}:">
